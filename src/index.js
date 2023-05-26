@@ -4,12 +4,14 @@ import './index.css';
 import App from './App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
+import Home from './components/Home';
+import Log from './components/Loggin';
+import LoginForm from './components/LoginForm';
+import Cafes from './components/Cafes';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+    <Cafes />
 );
 
 // If you want your app to work offline and load faster, you can change
