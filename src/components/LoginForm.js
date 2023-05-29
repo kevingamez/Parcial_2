@@ -1,66 +1,93 @@
-import React, { useState } from 'react';
-import { Form, Button } from 'react-bootstrap';
-import { Container, Row, Col, Card, Table } from 'react-bootstrap';
+import { useState } from "react";
+import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 
 
-const LoginForm = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+function LoginForm() {
+  const [authenticated, setAuthenticated] = useState(undefined);
 
-  const handleUsernameChange = (event) => {
-    setUsername(event.target.value);
-  };
+  function getErrorMessage() {
+    if (authenticated === false) {
+      return (
+        <p style={{ color: "red" }}>
+          Error
+        </p>
+      );
+    }
+  }
 
-  const handlePasswordChange = (event) => {
-    setPassword(event.target.value);
-  };
+  function handleLogin(e) {
+    e.preventDefault();
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // Aquí puedes realizar alguna acción con los datos del formulario, como enviarlos a un servidor o validarlos
-    console.log('Nombre de usuario:', username);
-    console.log('Contraseña:', password);
-  };
-
-  const handleCancel = () => {
-    // Lógica para cancelar el ingreso, si es necesario
-    setUsername('');
-    setPassword('');
-  };
+    fetch("http://localhost:3001/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        login: e.target.username.value,
+        password: e.target.password.value,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status === "error") {
+          setAuthenticated(false);
+        } else if (data.status === "success") {
+          setAuthenticated(true);
+          window.location.href = "/cafes";
+        }
+      });
+  }
 
   return (
-    <Form onSubmit={handleSubmit}>
-
-
-      <Form.Group controlId="formUsername">
-        <Form.Label column sm={2}>Nombre de usuario</Form.Label>
-        <Form.Control
-          type="text"
-          placeholder="Ingresa tu nombre de usuario"
-          value={username}
-          onChange={handleUsernameChange}
-        />
-      </Form.Group>
-
-      <Form.Group controlId="formPassword">
-        <Form.Label>Contraseña</Form.Label>
-        <Form.Control
-          type="password"
-          placeholder="Ingresa tu contraseña"
-          value={password}
-          onChange={handlePasswordChange}
-        />
-      </Form.Group>
-
-      <Button variant="primary" type="submit">
-        Ingresar
-      </Button>
-
-      <Button variant="secondary" onClick={handleCancel}>
-        Cancelar
-      </Button>
-    </Form>
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "40vh", }}>
+    <Container>
+      <h3 className="text-center">Inicio de sesión</h3>
+      <Card className="d-flex justify-content-center align-items-center red-bg">
+        <Card.Body style={{ width: "100%" }}>
+          <Form onSubmit={handleLogin} className="text-center">
+            <Form.Group controlId="username">
+              <Form.Label>Nombre de usuario</Form.Label>
+              <Form.Control className="text-bg" type="text" />
+            </Form.Group>
+            <Form.Group controlId="password">
+              <Form.Label>Contraseña</Form.Label>
+              <Form.Control className="text-bg" type="password" />
+            </Form.Group>
+        
+            <Row >
+              <Col md={6}>
+                <Button
+                  style={{ color: "black" , width:"20vh"}}
+                  width="100vh"
+                  backgroundColor="8da990"
+                >
+                  Ingresar
+                </Button>
+              </Col>
+              <Col md={6}>
+                <Button
+                  variant="danger"
+                  style={{ color: "black", width:"20vh"}}
+                  type="reset"
+                  width="100vh"
+                  backgroundColor="8da990"
+                >
+                  Cancelar
+                </Button>
+              </Col>
+            </Row>
+     
+            <div className="d-flex justify-content-center">
+              {getErrorMessage()}
+            </div>
+          </Form>
+        </Card.Body>
+      </Card>
+    </Container>
+    </div>
   );
-};
+  
+}
 
 export default LoginForm;

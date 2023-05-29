@@ -1,12 +1,10 @@
 import React from "react";
-import background from "./../assets/banner.png";
-import './../css/banner.css';
+import { Image } from 'react-bootstrap';
 
 function Banner() {
   return (
-    <div className="app">
-      <img className="image" src="./../assets/banner.png" alt="Imagen" />
-
+    <div className="d-flex justify-content-center align-items-center">
+     <Image src="banner.png" fluid style={{ width: "100%" }} />
     </div>
   );
 }
